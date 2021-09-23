@@ -33,7 +33,7 @@ namespace promo.core.testsuite
         }
 
         [Fact]
-        public void Newly_created_cart_should_have_zero_total_amount()
+        public void Newly_created_cart_should_have_zero_price()
         {
             var cart = new Cart(Currency);
             Assert.Equal(0, cart.Price);

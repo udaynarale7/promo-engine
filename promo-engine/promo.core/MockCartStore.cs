@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,16 @@ namespace promo.core
         {
             //assign id to cart
             cart.Id = Guid.NewGuid().ToString().Substring(0, 12);
+
+            //assign id for item and payment options in cart
+            cart.Items.ToList().ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.Id))
+                    x.Id = Guid.NewGuid().ToString();
+
+
+
+            });
 
             _cartStore.TryAdd(cart.Id, cart);
 
@@ -34,6 +45,14 @@ namespace promo.core
 
         public async Task<Cart> UpdateAsync(string id, Cart cart)
         {
+
+            //assign id for item and payment options in cart
+            cart.Items.ToList().ForEach(x =>
+            {
+                if (string.IsNullOrWhiteSpace(x.Id))
+                    x.Id = Guid.NewGuid().ToString();
+            });
+
             _cartStore.TryRemove(id, out Cart value);
             _cartStore.TryAdd(id, cart);
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace promo.core
@@ -20,16 +22,31 @@ namespace promo.core
 
         public string Currency { get; }
         public string Id { get; set; }
-        public decimal Price { get; set; }
+        public decimal Price => Items.Sum(x => x.Price);
         public DateTime UtcCreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UtcUpdatedAt { get; set; }
         private bool IsNew => string.IsNullOrWhiteSpace(Id) == true;
+
+        private readonly List<CartItem> _items = new List<CartItem>();
+        public IEnumerable<CartItem> Items
+        {
+            get => new List<CartItem>(_items);
+            internal set
+            {
+                if (value == null || value.Any() == false)
+                {
+                    _items.Clear();
+                }
+                else
+                    _items.AddRange(value.ToList());
+            }
+        }
 
         public async Task SaveToAsync(ICartStore cartStore)
         {
             if (IsNew == true)
             {
-                var cart = await cartStore.CreateAsync(this);
+                await cartStore.CreateAsync(this);
             }
             else
             {
@@ -42,6 +59,11 @@ namespace promo.core
             cartId.EnsureNotNullOrWhiteSpace(nameof(cartId));
             var cart = await cartStore.GetAsync(cartId);
             return cart;
+        }
+
+        public void Add(CartItem item)
+        {
+            _items.Add(item);
         }
     }
 }
