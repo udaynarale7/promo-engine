@@ -22,7 +22,7 @@ namespace promo.core
 
         public string Currency { get; }
         public string Id { get; set; }
-        public decimal Price => Items.Sum(x => x.Price);
+        public decimal Price => Items.Sum(x => x.Price * x.ProductCount) - _offers.Sum(x => x.Amount);
         public DateTime UtcCreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UtcUpdatedAt { get; set; }
         private bool IsNew => string.IsNullOrWhiteSpace(Id) == true;
@@ -64,6 +64,26 @@ namespace promo.core
         public void Add(CartItem item)
         {
             _items.Add(item);
+        }
+
+        public IEnumerable<Offer> Offers
+        {
+            get => new List<Offer>(_offers);
+            internal set
+            {
+                if (value == null || value.Any() == false)
+                {
+                    _offers.Clear();
+                }
+                else
+                    _offers.AddRange(value.ToList());
+            }
+        }
+
+        private readonly List<Offer> _offers = new List<Offer>();
+        public void AddOffer(Offer offer)
+        {
+            _offers.Add(offer);
         }
     }
 }

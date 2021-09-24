@@ -15,5 +15,6 @@ namespace promo.core
         public DateTime UtcUpdatedAt { get; set; }
         public Product Product { get; }
         public decimal Price { get; set; }
+        public int ProductCount { get; set; }
     }
 }

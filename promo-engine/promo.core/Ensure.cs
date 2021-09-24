@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace promo.core
@@ -17,6 +18,20 @@ namespace promo.core
         {
             if (string.IsNullOrWhiteSpace(target) == true)
                 throw new ArgumentNullException(name);
+        }
+
+        public static Cart EnsureExist(this Cart cart, string cartId)
+        {
+            if (cart == null)
+                throw new KeyNotFoundException(cartId);
+            return cart;
+        }
+        public static Cart EnsureCanAddOffer(this Cart cart)
+        {
+            if (cart.Items == null || cart.Items.Any() == false)
+                throw new InvalidOperationException(cart.Id);
+
+            return cart;
         }
     }
 
