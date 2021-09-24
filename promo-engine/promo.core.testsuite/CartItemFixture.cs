@@ -23,7 +23,7 @@ namespace promo.core.testsuite
 
                 var productKey = new ProductKey("productA", "productBType");
                 var product = new Product(productKey);
-                return new CartItem(product) { Price = 10 };
+                return new CartItem(product) { Price = 10, ProductCount = 1 };
             }
         }
 
@@ -33,7 +33,7 @@ namespace promo.core.testsuite
             {
                 var productKey = new ProductKey("productB", "productBType");
                 var product = new Product(productKey);
-                return new CartItem(product) { Price = 100 };
+                return new CartItem(product) { Price = 100, ProductCount = 1 };
             }
         }
         [Fact]
